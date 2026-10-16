@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tarot Therapie</title>
+<meta name="description" content="당신의 고민이 조금은 가벼워질 수 있도록, 언제나 진심으로 함께하겠습니다.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  :root {
+    --bg: #f6f3ec;
+    --card: #ffffff;
+    --ink: #24302c;
+    --sub: #6b7672;
+    --line: #e6e1d6;
+    --sage: #5e8f82;
+    --sage-deep: #3f6b60;
+    --gold: #b8955a;
+    --kakao: #fee500;
+    --kakao-ink: #191600;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+    line-height: 1.6;
+    word-break: keep-all;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 440px; margin: 0 auto; padding: 0 16px 48px; }
+
+  header {
+    background: linear-gradient(160deg, var(--sage) 0%, var(--sage-deep) 100%);
+    color: #fff;
+    text-align: center;
+    padding: 56px 24px 72px;
+    border-radius: 0 0 28px 28px;
+    margin: 0 -16px;
+  }
+  .ornament { color: var(--gold); letter-spacing: 10px; font-size: 13px; }
+  header h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 400;
+    font-size: 34px;
+    letter-spacing: 1px;
+    margin: 10px 0 6px;
+  }
+  .role { font-size: 13px; opacity: .8; letter-spacing: 2px; }
+  .tagline { margin-top: 20px; font-size: 15px; opacity: .95; }
+
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: -32px;
+  }
+  .btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 56px;
+    border-radius: 14px;
+    font-size: 16px; font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 6px 18px rgba(36, 48, 44, .12);
+  }
+  .btn svg { width: 20px; height: 20px; flex: none; }
+  .btn-call { background: var(--card); color: var(--sage-deep); }
+  .btn-kakao { background: var(--kakao); color: var(--kakao-ink); }
+
+  section {
+    background: var(--card);
+    border-radius: 18px;
+    padding: 22px 20px;
+    margin-top: 14px;
+    border: 1px solid var(--line);
+  }
+  h2 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--sage);
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+  }
+  .intro p { font-size: 15px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+  .tags span {
+    font-size: 13px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: #eef4f2;
+    color: var(--sage-deep);
+  }
+
+  .price { list-style: none; }
+  .price li {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--line);
+  }
+  .price li:last-child { border-bottom: 0; }
+  .price .name { font-size: 15px; }
+  .price .name small { display: block; font-size: 12px; color: var(--sub); }
+  .price .won { font-size: 17px; font-weight: 700; white-space: nowrap; }
+  .note { font-size: 12px; color: var(--sub); margin-top: 10px; }
+
+  .account {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    background: #faf8f3;
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+  .account .bank { font-size: 13px; color: var(--sub); }
+  .account .num { font-size: 17px; font-weight: 700; letter-spacing: .3px; }
+  .account .holder { font-size: 13px; color: var(--sub); }
+  .copy {
+    flex: none;
+    border: 1px solid var(--sage);
+    background: #fff;
+    color: var(--sage-deep);
+    font: inherit; font-size: 14px; font-weight: 700;
+    padding: 10px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  .copy.done { background: var(--sage); color: #fff; }
+
+  .hours { font-size: 15px; }
+  .hours div { display: flex; justify-content: space-between; padding: 4px 0; }
+  .hours span:first-child { color: var(--sub); }
+
+  footer { text-align: center; font-size: 12px; color: var(--sub); margin-top: 28px; }
+  footer .ornament { display: block; margin-bottom: 6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="ornament">✦ ✦ ✦</div>
+    <h1>Tarot Therapie</h1>
+    <div class="role">타로 상담 · 김하늘</div>
+    <p class="tagline">당신의 고민이 조금은 가벼워질 수 있도록<br>언제나 진심으로 함께하겠습니다.</p>
+  </header>
+
+  <div class="actions">
+    <a class="btn btn-call" href="tel:010-1234-5678">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>
+      전화 상담
+    </a>
+    <a class="btn btn-kakao" href="https://open.kakao.com/o/sAbCdEfG">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3C6.5 3 2 6.6 2 11c0 2.8 1.9 5.3 4.7 6.7l-1 3.6c-.1.3.3.6.6.4l4.2-2.8c.5.1 1 .1 1.5.1 5.5 0 10-3.6 10-8S17.5 3 12 3z"/></svg>
+      오픈채팅
+    </a>
+  </div>
+
+  <section class="intro">
+    <h2>상담 안내</h2>
+    <p>연애, 재회, 진로, 인간관계까지. 지금 마음을 무겁게 하는 고민을 카드와 함께 차분히 들여다봅니다.</p>
+    <div class="tags"><span>연애·재회</span><span>진로·취업</span><span>인간관계</span><span>신년운세</span></div>
+  </section>
+
+  <section>
+    <h2>상담 요금</h2>
+    <ul class="price">
+      <li><span class="name">3질문 상담<small>채팅</small></span><span class="won">10,000원</span></li>
+      <li><span class="name">30분 상담<small>전화 · 채팅</small></span><span class="won">30,000원</span></li>
+      <li><span class="name">60분 심층 상담<small>전화 · 채팅</small></span><span class="won">50,000원</span></li>
+    </ul>
+    <p class="note">입금 확인 후 상담이 시작됩니다.</p>
+  </section>
+
+  <section>
+    <h2>입금 계좌</h2>
+    <div class="account">
+      <div>
+        <div class="bank">카카오뱅크</div>
+        <div class="num" id="acct">3333-01-1234567</div>
+        <div class="holder">예금주 김하늘</div>
+      </div>
+      <button class="copy" type="button" id="copyBtn">복사</button>
+    </div>
+  </section>
+
+  <section>
+    <h2>상담 시간</h2>
+    <div class="hours">
+      <div><span>평일</span><span>오후 2시 ~ 밤 11시</span></div>
+      <div><span>주말</span><span>오후 1시 ~ 밤 10시</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span class="ornament">✦</span>
+    Tarot Therapie
+  </footer>
+</div>
+<script>
+  (function () {
+    var btn = document.getElementById('copyBtn');
+    var num = document.getElementById('acct').textContent.trim();
+    function done() {
+      btn.textContent = '복사됨';
+      btn.classList.add('done');
+      setTimeout(function () { btn.textContent = '복사'; btn.classList.remove('done'); }, 1800);
+    }
+    function fallback() {
+      var t = document.createElement('textarea');
+      t.value = num; t.setAttribute('readonly', '');
+      t.style.position = 'fixed'; t.style.opacity = '0';
+      document.body.appendChild(t); t.select();
+      try { document.execCommand('copy'); done(); } catch (e) {}
+      document.body.removeChild(t);
+    }
+    btn.addEventListener('click', function () {
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(num).then(done, fallback);
+      } else { fallback(); }
+    });
+  })();
+</script>
+</body>
+</html>
