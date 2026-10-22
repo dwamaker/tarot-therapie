@@ -219,7 +219,7 @@
 </script>
 <script id="statusJs">
   // Open/closed and a notice from a Google Sheet published as CSV: column A is the key
-  // (a name containing 상태 or 공지), column B the value. If the sheet can't be read, the page stays as it is.
+  // (a name containing 상태 or 공지), column B the value. If the sheet can't be read, the last state stays.
   (function () {
     var box = document.getElementById('status');
     if (!box || !box.dataset.sheet) return;
@@ -238,28 +238,41 @@
       rows.forEach(function (r) { if (r[0]) o[r[0].trim()] = (r[1] || '').trim(); });
       return o;
     }
+    var KEY = 'tarotStatus', call = document.querySelector('.btn-call');
+    var href = call && call.getAttribute('href'), kids = call ? Array.prototype.slice.call(call.childNodes) : [];
+    function show(st) {
+      box.replaceChildren();
+      box.className = st.closed ? 'status closed' : 'status';
+      box.hidden = !(st.closed || st.note);
+      if (call) {
+        if (href) call.setAttribute('href', href);
+        call.removeAttribute('aria-disabled');
+        call.classList.remove('off');
+        call.replaceChildren.apply(call, kids);
+      }
+      if (st.closed) {
+        var b = document.createElement('b');
+        b.textContent = '지금은 상담 휴무입니다';
+        box.append(b);
+        if (call) {
+          call.removeAttribute('href');
+          call.setAttribute('aria-disabled', 'true');
+          call.classList.add('off');
+          call.replaceChildren(call.querySelector('svg'), '지금은 휴무');
+        }
+      }
+      if (st.note) box.append(st.note);
+    }
+    // Last state this phone saw, shown before the sheet answers (it takes a moment).
+    try { var last = JSON.parse(localStorage.getItem(KEY)); if (last) show(last); } catch (e) {}
     fetch(box.dataset.sheet, { cache: 'no-store' })
       .then(function (r) { if (!r.ok) throw Error(r.status); return r.text(); })
       .then(function (t) {
         var s = parse(t);
         function get(k) { for (var x in s) if (x.indexOf(k) >= 0) return s[x]; return ''; }
-        var closed = /휴무/.test(get('상태')), note = get('공지').slice(0, 200);
-        if (!closed && !note) return;
-        if (closed) {
-          box.classList.add('closed');
-          var b = document.createElement('b');
-          b.textContent = '지금은 상담 휴무입니다';
-          box.append(b);
-          var call = document.querySelector('.btn-call');
-          if (call) {
-            call.removeAttribute('href');
-            call.setAttribute('aria-disabled', 'true');
-            call.classList.add('off');
-            call.replaceChildren(call.querySelector('svg'), '지금은 휴무');
-          }
-        }
-        if (note) box.append(note);
-        box.hidden = false;
+        var st = { closed: /휴무/.test(get('상태')), note: get('공지').slice(0, 200) };
+        show(st);
+        try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {}
       })
       .catch(function () {});
   })();
