@@ -130,6 +130,10 @@
   footer { text-align: center; font-size: 17px; color: var(--sub); margin-top: 28px; }
   footer .ornament { display: block; margin-bottom: 6px; }
   .perk { margin-top: 14px; padding: 12px 14px; border-radius: 12px; background: #f6f0e2; color: var(--ink); font-size: 19px; font-weight: 600; }
+  .status { margin-top: 14px; padding: 14px 16px; border-radius: 14px; background: #fff; border: 2px solid var(--gold); font-size: 20px; white-space: pre-line; }
+  .status b { display: block; font-size: 22px; margin-bottom: 2px; }
+  .status.closed { border-color: #a23b32; background: #fdf3f1; }
+  .btn-call.off { background: #e8e5de; color: #555; box-shadow: none; }
 </style>
 </head>
 <body>
@@ -151,6 +155,8 @@
       문의·예약
     </a>
   </div>
+
+  <div class="status" id="status" data-sheet="https://docs.google.com/spreadsheets/d/e/2PACX-1vTG3_2diACzHqvT3Hqcmf2kFtRU-2D6cNaGzJqpcw5oLxDExjPGGfeOknKhHaHqqBCLycre9F7bk3Dn/pub?gid=0&amp;single=true&amp;output=csv" hidden=""></div>
 
   <section class="intro">
     <h2>상담 안내</h2>
@@ -187,7 +193,7 @@
     Tarot Therapie
   </footer>
 </div>
-<script>
+<script id="copyJs">
   (function () {
     var btn = document.getElementById('copyBtn');
     var num = document.getElementById('acct').textContent.trim();
@@ -209,6 +215,53 @@
         navigator.clipboard.writeText(num).then(done, fallback);
       } else { fallback(); }
     });
+  })();
+</script>
+<script id="statusJs">
+  // Open/closed and a notice from a Google Sheet published as CSV: column A is the key
+  // (a name containing 상태 or 공지), column B the value. If the sheet can't be read, the page stays as it is.
+  (function () {
+    var box = document.getElementById('status');
+    if (!box || !box.dataset.sheet) return;
+    function parse(t) {
+      var rows = [[]], f = '', q = false;
+      for (var i = 0; i < t.length; i++) {
+        var c = t[i];
+        if (q) { if (c === '"') { if (t[i + 1] === '"') { f += '"'; i++; } else q = false; } else f += c; }
+        else if (c === '"') q = true;
+        else if (c === ',') { rows[rows.length - 1].push(f); f = ''; }
+        else if (c === '\n') { rows[rows.length - 1].push(f); f = ''; rows.push([]); }
+        else if (c !== '\r') f += c;
+      }
+      rows[rows.length - 1].push(f);
+      var o = {};
+      rows.forEach(function (r) { if (r[0]) o[r[0].trim()] = (r[1] || '').trim(); });
+      return o;
+    }
+    fetch(box.dataset.sheet, { cache: 'no-store' })
+      .then(function (r) { if (!r.ok) throw Error(r.status); return r.text(); })
+      .then(function (t) {
+        var s = parse(t);
+        function get(k) { for (var x in s) if (x.indexOf(k) >= 0) return s[x]; return ''; }
+        var closed = /휴무/.test(get('상태')), note = get('공지').slice(0, 200);
+        if (!closed && !note) return;
+        if (closed) {
+          box.classList.add('closed');
+          var b = document.createElement('b');
+          b.textContent = '지금은 상담 휴무입니다';
+          box.append(b);
+          var call = document.querySelector('.btn-call');
+          if (call) {
+            call.removeAttribute('href');
+            call.setAttribute('aria-disabled', 'true');
+            call.classList.add('off');
+            call.replaceChildren(call.querySelector('svg'), '지금은 휴무');
+          }
+        }
+        if (note) box.append(note);
+        box.hidden = false;
+      })
+      .catch(function () {});
   })();
 </script>
 
