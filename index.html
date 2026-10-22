@@ -134,6 +134,7 @@
   .status b { display: block; font-size: 22px; margin-bottom: 2px; }
   .status.closed { border-color: #a23b32; background: #fdf3f1; }
   .btn-call.off { background: #e8e5de; color: #555; box-shadow: none; }
+  .btn-call.wait { color: transparent; pointer-events: none; }
 </style>
 </head>
 <body>
@@ -156,7 +157,7 @@
     </a>
   </div>
 
-  <div class="status" id="status" data-sheet="https://docs.google.com/spreadsheets/d/e/2PACX-1vTG3_2diACzHqvT3Hqcmf2kFtRU-2D6cNaGzJqpcw5oLxDExjPGGfeOknKhHaHqqBCLycre9F7bk3Dn/pub?gid=0&amp;single=true&amp;output=csv" hidden=""></div>
+  <div class="status" id="status" data-sheet="https://docs.google.com/spreadsheets/d/1Y9gHFPW4LWyTueHhmliaaZR2MWr5qq3tFlR3tyWPWK0/gviz/tq?tqx=out:csv&amp;headers=0" hidden=""></div>
 
   <section class="intro">
     <h2>상담 안내</h2>
@@ -247,7 +248,7 @@
       if (call) {
         if (href) call.setAttribute('href', href);
         call.removeAttribute('aria-disabled');
-        call.classList.remove('off');
+        call.classList.remove('off', 'wait');
         call.replaceChildren.apply(call, kids);
       }
       if (st.closed) {
@@ -264,7 +265,14 @@
       if (st.note) box.append(st.note);
     }
     // Last state this phone saw, shown before the sheet answers (it takes a moment).
-    try { var last = JSON.parse(localStorage.getItem(KEY)); if (last) show(last); } catch (e) {}
+    var last = null;
+    try { last = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
+    if (last) show(last);
+    else if (call) {
+      // First visit: blank the call button until the sheet answers, so it never shows the wrong state.
+      call.classList.add('wait');
+      setTimeout(function () { call.classList.remove('wait'); }, 1500);
+    }
     fetch(box.dataset.sheet, { cache: 'no-store' })
       .then(function (r) { if (!r.ok) throw Error(r.status); return r.text(); })
       .then(function (t) {
@@ -274,7 +282,7 @@
         show(st);
         try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {}
       })
-      .catch(function () {});
+      .catch(function () { if (call) call.classList.remove('wait'); });
   })();
 </script>
 
